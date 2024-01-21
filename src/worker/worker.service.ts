@@ -13,6 +13,7 @@ export class WorkerService {
     hubCallback: process.env.HUB_CALLBACK,
     path: process.env.HUB_CALLBACK_PATH,
     port: process.env.HUB_CALLBACK_PORT,
+    secret: process.env.HUB_CALLBACK_SECRET,
   });
 
   api = new Api(process.env.TELEGRAM_TOKEN);

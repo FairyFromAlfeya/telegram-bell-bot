@@ -9,6 +9,7 @@ new NestGram(
   {
     url: process.env.TELEGRAM_WEBHOOK,
     port: +process.env.TELEGRAM_WEBHOOK_PORT as WebhookPorts,
+    secret_token: process.env.TELEGRAM_SECRET,
   },
   {
     runType: 'webhook',
