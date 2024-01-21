@@ -81,7 +81,7 @@ export class WorkerService {
 
       const followers = this.realm
         .objects(Follow)
-        .filtered(`channel = '${notification.channel.id}'`);
+        .filtered('channel._id == $0', notification.channel.id);
 
       for (const follower of followers) {
         await this.api.send(
