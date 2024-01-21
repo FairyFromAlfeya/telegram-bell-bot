@@ -72,7 +72,11 @@ export class WorkerService {
   }
 
   async sendNotification(notification: Notification): Promise<void> {
-    if (notification.updated.getTime() <= notification.published.getTime()) {
+    const timeDiff = Math.abs(
+      notification.updated.getTime() - notification.published.getTime(),
+    );
+
+    if (timeDiff < 1_800_000) {
       console.log(`New video: ${notification.video.id}`);
 
       const followers = this.realm
