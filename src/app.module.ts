@@ -1,10 +1,15 @@
-import { Module } from '@nestjs/common';
+import { Module } from 'nestgram';
+
+import { FollowModule } from './follow/follow.module';
+import { WorkerModule } from './worker/worker.module';
+import { UnfollowModule } from './unfollow/unfollow.module';
+
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
 @Module({
-  imports: [],
+  imports: [FollowModule, WorkerModule, UnfollowModule],
   controllers: [AppController],
-  providers: [AppService],
+  services: [AppService],
 })
 export class AppModule {}
