@@ -19,7 +19,8 @@
     "dotenv": "16.3.2",
     "googleapis": "131.0.0",
     "nestgram": "1.9.0",
-    "realm": "12.5.1"
+    "realm": "12.5.1",
+    "rxjs": "^7.8.1"
   },
   "devDependencies": {
     "@types/node": "20.11.5",

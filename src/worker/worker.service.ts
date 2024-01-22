@@ -1,6 +1,7 @@
 import { Service, Api, Keyboard, KeyboardTypes } from 'nestgram';
 import * as Realm from 'realm';
 import { Notification } from '@daangamesdg/youtube-notifications';
+import { from, lastValueFrom, mergeMap } from 'rxjs';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Notifier = require('@daangamesdg/youtube-notifications');
 
@@ -56,7 +57,7 @@ export class WorkerService {
     this.resubAll();
   }
 
-  resubAll(): void {
+  async resubAll(): Promise<void> {
     const channels = this.realm.objects(Channel);
 
     console.log(
@@ -64,10 +65,25 @@ export class WorkerService {
     );
 
     if (this.subedChannels) {
-      this.notifier.unsubscribe(this.subedChannels);
+      await lastValueFrom(
+        from(this.subedChannels).pipe(
+          mergeMap((c) => {
+            this.notifier.unsubscribe(c);
+            return c;
+          }, 1),
+        ),
+      );
     }
 
-    this.notifier.subscribe(channels.map((r) => r._id));
+    await lastValueFrom(
+      from(channels.slice(0)).pipe(
+        mergeMap((c) => {
+          this.notifier.subscribe(c._id);
+          return c._id;
+        }, 1),
+      ),
+    );
+
     this.subedChannels = channels.map((r) => r._id);
   }
 
