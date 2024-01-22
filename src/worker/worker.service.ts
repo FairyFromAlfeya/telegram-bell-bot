@@ -8,6 +8,9 @@ const Notifier = require('@daangamesdg/youtube-notifications');
 import { Channel } from '../realm/channel.model';
 import { Follow } from '../realm/follow.model';
 
+const delay = (delayInms: number) =>
+  new Promise((resolve) => setTimeout(resolve, delayInms));
+
 @Service()
 export class WorkerService {
   notifier = new Notifier({
@@ -67,20 +70,26 @@ export class WorkerService {
     if (this.subedChannels) {
       await lastValueFrom(
         from(this.subedChannels).pipe(
-          mergeMap((c) => {
-            this.notifier.unsubscribe(c);
-            return c;
-          }, 1),
+          mergeMap(
+            (c) =>
+              delay(500)
+                .then(() => this.notifier.unsubscribe(c))
+                .then(() => c),
+            1,
+          ),
         ),
       );
     }
 
     await lastValueFrom(
       from(channels.slice(0)).pipe(
-        mergeMap((c) => {
-          this.notifier.subscribe(c._id);
-          return c._id;
-        }, 1),
+        mergeMap(
+          (c) =>
+            delay(500)
+              .then(() => this.notifier.subscribe(c._id))
+              .then(() => c._id),
+          1,
+        ),
       ),
     );
 
